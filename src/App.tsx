@@ -28,12 +28,13 @@ function App() {
   const [numberOfCells, setNumberOfCells] = useState(25);
   const [cells, setCells] = useState(generateCells(numberOfCells));
 
-  const updateCell = (updatedCell: CellType) => {
-    const index = cells.findIndex(
-      (cell) => cell.x === updatedCell.x && cell.y === updatedCell.y
-    );
+  const getCellIndexByCoordinate = (x: string, y: number) =>
+    cells.findIndex((cell) => cell.x === x && cell.y === y);
+
+  const updateCell = (newCell: CellType) => {
+    const index = getCellIndexByCoordinate(newCell.x, newCell.y);
     const newCellsArray = [...cells];
-    newCellsArray[index] = updatedCell;
+    newCellsArray[index] = newCell;
 
     setCells(newCellsArray);
   };
@@ -42,18 +43,24 @@ function App() {
     <AppDiv>
       <div>
         <div>
-          <Cell disabled />
+          <Cell x={""} y={0} disabled />
           {alphabet.map((letter) => (
-            <Cell value={letter} disabled />
+            <Cell x={""} y={0} value={letter} disabled />
           ))}
         </div>
         {[...Array(numberOfCells)].map((_, i) => {
           const rowCells = cells.filter((cell) => cell.y === i);
           return (
             <div>
-              <Cell value={(i + 1).toString()} />
+              <Cell x={""} y={0} value={(i + 1).toString()} />
               {rowCells.map(({ x, y, value }) => (
-                <Cell x={x} y={y} value={value} updateParent={updateCell} />
+                <Cell
+                  x={x}
+                  y={y}
+                  value={value}
+                  updateParent={updateCell}
+                  cells={cells}
+                />
               ))}
             </div>
           );
