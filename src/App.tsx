@@ -1,13 +1,21 @@
+// React
 import { useState } from "react";
+
+// Components
 import Cell from "../components/Cell";
+
+// CSS
 import styled from "styled-components";
+
+// Types
+import { CellType } from "../types";
 
 const alphabet = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
 
 const AppDiv = styled.div``;
 
 const generateCells = (amount: number) => {
-  const result: { x: string; y: number; value: string }[] = [];
+  const result: CellType[] = [];
   alphabet.forEach((x) => {
     [...Array(amount)].forEach((_, y) => {
       result.push({ x, y, value: "" });
@@ -20,7 +28,15 @@ function App() {
   const [numberOfCells, setNumberOfCells] = useState(25);
   const [cells, setCells] = useState(generateCells(numberOfCells));
 
-  const updateCell = () => {};
+  const updateCell = (updatedCell: CellType) => {
+    const index = cells.findIndex(
+      (cell) => cell.x === updatedCell.x && cell.y === updatedCell.y
+    );
+    const newCellsArray = [...cells];
+    newCellsArray[index] = updatedCell;
+
+    setCells(newCellsArray);
+  };
 
   return (
     <AppDiv>
@@ -36,8 +52,8 @@ function App() {
           return (
             <div>
               <Cell value={(i + 1).toString()} />
-              {rowCells.map(({ value }) => (
-                <Cell value={value} />
+              {rowCells.map(({ x, y, value }) => (
+                <Cell x={x} y={y} value={value} updateParent={updateCell} />
               ))}
             </div>
           );

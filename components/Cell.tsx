@@ -1,18 +1,39 @@
+// React
 import React from "react";
+import { useState } from "react";
+
+// CSS
 import styled from "styled-components";
 
-//styled component Li
+// Types
+import { CellType } from "../types";
+
 const BorderedInput = styled.input`
   width: 70px;
   height: 20px;
   border: 1.5px solid #000;
 `;
 
-type Props = {
-  value?: string;
-  disabled?: boolean;
-};
+export default function Cell({
+  x,
+  y,
+  value,
+  disabled,
+  updateParent,
+}: CellType) {
+  const [valueState, setValueState] = useState(value);
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    setValueState(value);
+    updateParent && updateParent({ x, y, value });
+  };
 
-export default function Cell({ value, disabled }: Props) {
-  return <BorderedInput value={value} disabled={disabled} />;
+  return (
+    <BorderedInput
+      type="text"
+      value={valueState}
+      disabled={disabled}
+      onChange={handleChange}
+    />
+  );
 }
