@@ -12,6 +12,7 @@ const BorderedInput = styled.input`
   width: 70px;
   height: 20px;
   border: 1.5px solid #000;
+  text-align: center;
 `;
 
 export default function Cell({
@@ -34,7 +35,7 @@ export default function Cell({
     const cellCoordinates = matches[1].replace(/\W+/g, " ").split(" ");
 
     const findCell = (XYString: string) =>
-      cells.find(({ x, y }) => `${x}${y + 1}` === XYString);
+      cells?.find(({ x, y }) => `${x}${y + 1}` === XYString);
 
     const firstCell = findCell(cellCoordinates[0]);
     const secondCell = findCell(cellCoordinates[1]);
@@ -64,7 +65,10 @@ export default function Cell({
     setIsFocused(true);
   };
 
-  const handleBlur = () => setIsFocused(false);
+  const handleBlur = () => {
+    setIsFocused(false);
+    setValueState(getCellSum(value));
+  };
 
   useEffect(() => {
     try {
