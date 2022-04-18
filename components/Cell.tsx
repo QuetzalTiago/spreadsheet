@@ -8,8 +8,11 @@ import styled from "styled-components";
 // Types
 import { CellType } from "../types";
 
+// Utils
+import { KEYS, getCellSum } from "../utils";
+
 const BorderedInput = styled.input`
-  width: 70px;
+  width: 57px;
   height: 20px;
   border: 1.5px solid #000;
   text-align: center;
@@ -26,28 +29,6 @@ export default function Cell({
   const [valueState, setValueState] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
 
-  const getCellSum = (cellValue: string) => {
-    const insideParenthesesRegEx = /\(([^)]+)\)/;
-    const matches = insideParenthesesRegEx.exec(cellValue);
-
-    if (!cellValue.includes("SUM(") || !matches) return cellValue;
-
-    const cellCoordinates = matches[1].replace(/\W+/g, " ").split(" ");
-
-    const findCell = (XYString: string) =>
-      cells?.find(({ x, y }) => `${x}${y + 1}` === XYString);
-
-    const firstCell = findCell(cellCoordinates[0]);
-    const secondCell = findCell(cellCoordinates[1]);
-
-    const result = parseInt(firstCell.value) + parseInt(secondCell.value);
-    if (!result && result !== 0) {
-      return cellValue;
-    } else {
-      return result;
-    }
-  };
-
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     setValueState(value);
@@ -56,7 +37,7 @@ export default function Cell({
 
   const handleKeyDown = (e: any) => {
     const value = e.currentTarget.value;
-    e.keyCode === 13 && setValueState(getCellSum(value));
+    e.keyCode === KEYS.ENTER && setValueState(getCellSum(value, cells));
     updateParent && updateParent({ x, y, value });
   };
 
@@ -67,12 +48,12 @@ export default function Cell({
 
   const handleBlur = () => {
     setIsFocused(false);
-    setValueState(getCellSum(value));
+    setValueState(getCellSum(value, cells));
   };
 
   useEffect(() => {
     try {
-      !isFocused && setValueState(getCellSum(value));
+      !isFocused && setValueState(getCellSum(value, cells));
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +65,6 @@ export default function Cell({
       value={valueState}
       disabled={disabled}
       onChange={handleChange}
-      onDoubleClick={handleClick}
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
       onClick={handleClick}
