@@ -14,8 +14,7 @@ import { alphabet, getCellIndexByCoordinates } from "../utils";
 import styled from "styled-components";
 
 const Table = styled.div`
-  overflow-y: scroll;
-  display: flex;
+  white-space: nowrap;
 `;
 
 const generateCells = (amount: number) => {
