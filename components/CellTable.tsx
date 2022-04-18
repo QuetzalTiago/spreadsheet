@@ -10,6 +10,14 @@ import { CellType } from "../types";
 // Utils
 import { alphabet, getCellIndexByCoordinates } from "../utils";
 
+// CSS
+import styled from "styled-components";
+
+const Table = styled.div`
+  overflow-y: scroll;
+  display: flex;
+`;
+
 const generateCells = (amount: number) => {
   const result: CellType[] = [];
   alphabet.forEach((x) => {
@@ -21,7 +29,7 @@ const generateCells = (amount: number) => {
 };
 
 function CellTable() {
-  const [rows, setRows] = useState(25);
+  const [rows, setRows] = useState(50);
   const [cells, setCells] = useState(generateCells(rows));
 
   const updateCell = (newCell: CellType) => {
@@ -34,29 +42,31 @@ function CellTable() {
 
   return (
     <>
-      <div>
-        <Cell disabled />
-        {alphabet.map((letter) => (
-          <Cell value={letter} disabled />
-        ))}
-      </div>
-      {[...Array(rows)].map((_, i) => {
-        const rowCells = cells.filter((cell) => cell.y === i);
-        return (
-          <div>
-            <Cell value={(i + 1).toString()} disabled />
-            {rowCells.map(({ x, y, value }) => (
-              <Cell
-                x={x}
-                y={y}
-                value={value}
-                updateParent={updateCell}
-                cells={cells}
-              />
-            ))}
-          </div>
-        );
-      })}
+      <Table>
+        <div>
+          <Cell disabled />
+          {alphabet.map((letter) => (
+            <Cell value={letter} disabled />
+          ))}
+        </div>
+        {[...Array(rows)].map((_, i) => {
+          const rowCells = cells.filter((cell) => cell.y === i);
+          return (
+            <div>
+              <Cell value={(i + 1).toString()} disabled />
+              {rowCells.map(({ x, y, value }) => (
+                <Cell
+                  x={x}
+                  y={y}
+                  value={value}
+                  updateParent={updateCell}
+                  cells={cells}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </Table>
     </>
   );
 }

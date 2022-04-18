@@ -4,7 +4,7 @@ import CellTable from "../components/CellTable";
 function App() {
   return (
     <>
-      <CellTable />;
+      <CellTable />
     </>
   );
 }
